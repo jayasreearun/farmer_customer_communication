@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>FarmLink — Farm to Customer</title>
+<style>
+:root{--green:#236b45;--green2:#174b32;--mint:#eaf4ed;--cream:#fbfaf5;--ink:#203027;--muted:#68766d;--line:#dce6dd;--gold:#e5ad45;--white:#fff}
+*{box-sizing:border-box}body{margin:0;background:var(--cream);color:var(--ink);font-family:Inter,ui-sans-serif,system-ui,-apple-system,"Segoe UI",sans-serif}
+button,input,select,textarea{font:inherit}button{cursor:pointer;border:0}.topbar{height:72px;background:#fff;border-bottom:1px solid var(--line);display:flex;align-items:center;justify-content:space-between;padding:0 5vw;position:sticky;top:0;z-index:5}
+.brand{font-weight:850;font-size:1.35rem;color:var(--green2);letter-spacing:-.6px}.brand span{color:#a4bd75}.nav{display:flex;gap:10px;align-items:center}.nav button,.role-btn{background:transparent;color:var(--ink);padding:10px 13px;border-radius:10px}.nav button:hover,.role-btn.active{background:var(--mint);color:var(--green2)}.primary{background:var(--green);color:#fff;padding:11px 17px;border-radius:10px;font-weight:700}.primary:hover{background:var(--green2)}.secondary{background:var(--mint);color:var(--green2);padding:10px 14px;border-radius:10px;font-weight:650}.danger{background:#fff0ed;color:#a23b2b;padding:8px 11px;border-radius:8px}
+main{max-width:1180px;margin:auto;padding:28px 22px 70px}.hero{background:linear-gradient(115deg,#e9f3e9,#f8f5e8);border:1px solid #e0e9dc;border-radius:24px;padding:42px;display:grid;grid-template-columns:1.3fr .7fr;gap:20px;align-items:center}
+.eyebrow{color:var(--green);font-size:.78rem;font-weight:800;letter-spacing:1.6px;text-transform:uppercase}.hero h1{font-size:clamp(2rem,4vw,3.4rem);line-height:1.08;letter-spacing:-1.8px;margin:12px 0}.hero p{color:var(--muted);max-width:580px;line-height:1.7}.hero-art{font-size:7rem;text-align:center}.hero-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:22px}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:18px 0 30px}.stat,.panel,.product,.order-card{background:#fff;border:1px solid var(--line);border-radius:16px}.stat{padding:17px 20px}.stat strong{display:block;font-size:1.4rem;color:var(--green2)}.stat small{color:var(--muted)}
+.section-head{display:flex;justify-content:space-between;gap:16px;align-items:end;margin:28px 0 16px}.section-head h2{margin:0;font-size:1.55rem}.section-head p{margin:5px 0 0;color:var(--muted);font-size:.92rem}
+.toolbar{display:flex;gap:10px;flex-wrap:wrap;margin:16px 0}.field{background:#fff;border:1px solid var(--line);border-radius:10px;padding:11px 12px;min-width:0;color:var(--ink)}.search{flex:1;min-width:210px}.toolbar select{min-width:145px}
+.grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:16px}.product{overflow:hidden;transition:.18s}.product:hover{transform:translateY(-3px);box-shadow:0 10px 28px #183b2010}.product-photo{height:145px;background:var(--mint);display:grid;place-items:center;font-size:4.5rem}.product-body{padding:16px}.tag{display:inline-block;background:#edf5e9;color:var(--green);padding:4px 8px;border-radius:99px;font-size:.72rem;font-weight:750}.product h3{margin:10px 0 4px}.meta{color:var(--muted);font-size:.85rem;line-height:1.55}.price-row{display:flex;align-items:center;justify-content:space-between;margin-top:14px}.price{font-weight:850;font-size:1.25rem;color:var(--green2)}.price small{font-size:.75rem;color:var(--muted);font-weight:500}
+.panel{padding:22px;margin-top:20px}.hidden{display:none!important}.form-grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.form-grid label{display:flex;flex-direction:column;gap:6px;font-size:.85rem;font-weight:700;color:var(--muted)}.form-grid .wide{grid-column:1/-1}.form-grid input,.form-grid select,.form-grid textarea{width:100%}
+.dashboard-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}.order-card{padding:16px;margin:10px 0}.order-top{display:flex;justify-content:space-between;gap:10px}.status{font-size:.75rem;font-weight:800;padding:5px 8px;border-radius:99px;background:#fff4d9;color:#815d16}.status.Accepted,.status.Delivered{background:#e7f5e9;color:#236b45}.status.Rejected{background:#fff0ed;color:#a23b2b}
+.empty{padding:30px;text-align:center;color:var(--muted);border:1px dashed var(--line);border-radius:14px}.notice{background:#fff7e4;border:1px solid #f1dfb5;color:#6c531e;border-radius:12px;padding:12px 15px;font-size:.86rem;line-height:1.5;margin-top:18px}
+footer{border-top:1px solid var(--line);padding:25px 5vw;color:var(--muted);font-size:.85rem;text-align:center;background:#fff}
+.modal-backdrop{position:fixed;inset:0;background:#10231888;display:grid;place-items:center;padding:18px;z-index:10}.modal{background:#fff;border-radius:18px;padding:24px;width:min(480px,100%);max-height:90vh;overflow:auto}.modal h2{margin-top:0}.modal-actions{display:flex;gap:9px;justify-content:flex-end;margin-top:18px}
+.toast{position:fixed;bottom:22px;right:22px;background:#183d2a;color:white;padding:12px 17px;border-radius:10px;box-shadow:0 8px 25px #0002;z-index:20}
+@media(max-width:850px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}.hero{grid-template-columns:1fr;padding:30px}.hero-art{display:none}.nav{gap:2px}.nav button{padding:8px}}
+@media(max-width:600px){.topbar{padding:0 15px;height:auto;min-height:65px;flex-wrap:wrap}.nav{width:100%;overflow:auto;padding:5px 0}.nav button{white-space:nowrap}.grid,.stats,.dashboard-grid,.form-grid{grid-template-columns:1fr}.hero{padding:24px}.section-head{align-items:start;flex-direction:column}main{padding:18px 14px 50px}}
+</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="brand">🌱 Farm<span>Link</span></div>
+  <nav class="nav" aria-label="Main navigation">
+    <button onclick="showPage('home')">Marketplace</button>
+    <button onclick="showPage('dashboard')">My dashboard</button>
+    <button onclick="openAuth()">Sign in</button>
+    <button class="primary" onclick="openAuth('farmer')">Join as farmer</button>
+  </nav>
+</header>
+<main>
+<section id="homePage">
+  <div class="hero">
+    <div>
+      <div class="eyebrow">A shorter journey from farm to table</div>
+      <h1>Good food. Fair prices.<br>Direct from farmers.</h1>
+      <p>Discover fresh produce, know who grows your food and connect directly with local farmers. Farmers can list their harvest and reach customers without unnecessary intermediaries.</p>
+      <div class="hero-actions">
+        <button class="primary" onclick="document.getElementById('marketplace').scrollIntoView({behavior:'smooth'})">Explore produce</button>
+        <button class="secondary" onclick="openAuth('farmer')">Start selling →</button>
+      </div>
+    </div>
+    <div class="hero-art" aria-hidden="true">🥬🍅🌾</div>
+  </div>
+  <div class="stats">
+    <div class="stat"><strong id="listingCount">0</strong><small>Available listings</small></div>
+    <div class="stat"><strong>Direct</strong><small>Farmer-to-customer connection</small></div>
+    <div class="stat"><strong>₹</strong><small>Transparent farmer-set prices</small></div>
+  </div>
+  <section id="marketplace">
+    <div class="section-head"><div><div class="eyebrow">Marketplace</div><h2>Fresh from the farm</h2><p>Browse produce and contact the farmer directly.</p></div></div>
+    <div class="toolbar">
+      <input id="searchInput" class="field search" placeholder="Search tomatoes, rice, farmer name..." oninput="renderProducts()">
+      <select id="categoryFilter" class="field" onchange="renderProducts()"><option value="All">All categories</option><option>Vegetables</option><option>Fruits</option><option>Grains</option><option>Dairy</option><option>Other</option></select>
+      <select id="sortFilter" class="field" onchange="renderProducts()"><option value="new">Recently added</option><option value="low">Price: low to high</option><option value="high">Price: high to low</option></select>
+    </div>
+    <div id="productGrid" class="grid"></div>
+  </section>
+</section>
+
+<section id="dashboardPage" class="hidden">
+  <div class="section-head"><div><div class="eyebrow">Your workspace</div><h2 id="dashboardTitle">Dashboard</h2><p id="dashboardSubtitle">Sign in to manage listings and orders.</p></div><button class="secondary" onclick="openAuth()">Change account</button></div>
+  <div id="dashboardContent"></div>
+</section>
+</main>
+<footer>FarmLink demo marketplace · Built to connect farmers and customers directly</footer>
+
+<div id="authModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h2>Welcome to FarmLink</h2>
+    <p class="meta">Choose how you want to use the marketplace.</p>
+    <label class="meta" for="roleSelect">I am a</label>
+    <select id="roleSelect" class="field" style="width:100%;margin:7px 0 12px"><option value="customer">Customer</option><option value="farmer">Farmer</option></select>
+    <label class="meta" for="userName">Your name</label>
+    <input id="userName" class="field" style="width:100%;margin:7px 0 12px" placeholder="Enter your name">
+    <label class="meta" for="userPhone">Phone number (optional)</label>
+    <input id="userPhone" class="field" style="width:100%;margin:7px 0 12px" placeholder="10-digit mobile number" inputmode="numeric">
+    <div class="modal-actions"><button class="secondary" onclick="closeAuth()">Cancel</button><button class="primary" onclick="signIn()">Continue</button></div>
+    <p class="meta">Demo sign-in only. Real OTP authentication must be added before public deployment.</p>
+  </div>
+</div>
+
+<div id="orderModal" class="modal-backdrop hidden">
+  <div class="modal">
+    <h2>Place an order</h2><div id="orderProductInfo" class="meta"></div>
+    <label class="meta" for="orderQty">Quantity</label>
+    <input id="orderQty" class="field" type="number" min="1" value="1" style="width:100%;margin:7px 0 12px">
+    <label class="meta" for="orderNote">Message to farmer (optional)</label>
+    <textarea id="orderNote" class="field" rows="3" style="width:100%;margin:7px 0 12px" placeholder="Preferred pickup time, delivery question..."></textarea>
+    <div class="modal-actions"><button class="secondary" onclick="closeOrder()">Cancel</button><button class="primary" onclick="submitOrder()">Send order request</button></div>
+  </div>
+</div>
+<div id="toast" class="toast hidden" role="status"></div>
+
+<script>
+const seedProducts = [
+ {id:1,name:"Fresh Tomatoes",category:"Vegetables",price:32,unit:"kg",qty:80,farmer:"Ravi Kumar",location:"Tiruchengode",emoji:"🍅",description:"Farm-fresh, locally harvested tomatoes."},
+ {id:2,name:"Country Bananas",category:"Fruits",price:48,unit:"dozen",qty:35,farmer:"Meena Farms",location:"Erode",emoji:"🍌",description:"Naturally ripened seasonal bananas."},
+ {id:3,name:"Organic Spinach",category:"Vegetables",price:20,unit:"bunch",qty:45,farmer:"Selvi",location:"Salem",emoji:"🥬",description:"Fresh leafy greens harvested this morning."},
+ {id:4,name:"Traditional Rice",category:"Grains",price:62,unit:"kg",qty:120,farmer:"Kannan Agro",location:"Namakkal",emoji:"🌾",description:"Locally grown traditional rice variety."},
+ {id:5,name:"Fresh Milk",category:"Dairy",price:38,unit:"litre",qty:25,farmer:"Lakshmi Dairy",location:"Tiruchengode",emoji:"🥛",description:"Fresh milk. Contact farmer for availability."},
+ {id:6,name:"Sweet Mangoes",category:"Fruits",price:90,unit:"kg",qty:40,farmer:"Arun Orchard",location:"Dharmapuri",emoji:"🥭",description:"Seasonal mangoes from a family orchard."}
+];
+let products = JSON.parse(localStorage.getItem("farmlink_products") || "null") || seedProducts;
+let orders = JSON.parse(localStorage.getItem("farmlink_orders") || "[]");
+let currentUser = JSON.parse(sessionStorage.getItem("farmlink_user") || "null");
+let selectedProduct = null;
+
+function saveData(){
+ localStorage.setItem("farmlink_products",JSON.stringify(products));
+ localStorage.setItem("farmlink_orders",JSON.stringify(orders));
+}
+function toast(message){
+ const el=document.getElementById("toast");el.textContent=message;el.classList.remove("hidden");
+ setTimeout(()=>el.classList.add("hidden"),2600);
+}
+function showPage(page){
+ document.getElementById("homePage").classList.toggle("hidden",page!=="home");
+ document.getElementById("dashboardPage").classList.toggle("hidden",page!=="dashboard");
+ if(page==="dashboard")renderDashboard();
+ window.scrollTo({top:0,behavior:"smooth"});
+}
+function openAuth(role){
+ if(role)document.getElementById("roleSelect").value=role;
+ if(currentUser){document.getElementById("roleSelect").value=currentUser.role;document.getElementById("userName").value=currentUser.name;document.getElementById("userPhone").value=currentUser.phone||"";}
+ document.getElementById("authModal").classList.remove("hidden");
+}
+function closeAuth(){document.getElementById("authModal").classList.add("hidden");}
+function signIn(){
+ const name=document.getElementById("userName").value.trim();
+ if(!name){toast("Please enter your name.");return;}
+ currentUser={name,role:document.getElementById("roleSelect").value,phone:document.getElementById("userPhone").value.trim()};
+ sessionStorage.setItem("farmlink_user",JSON.stringify(currentUser));
+ closeAuth();toast("Welcome, "+name+"!");showPage("dashboard");
+}
+function renderProducts(){
+ const query=document.getElementById("searchInput").value.toLowerCase();
+ const category=document.getElementById("categoryFilter").value;
+ const sort=document.getElementById("sortFilter").value;
+ let list=products.filter(p=>(category==="All"||p.category===category)&&
+  [p.name,p.farmer,p.location,p.category].join(" ").toLowerCase().includes(query));
+ if(sort==="low")list.sort((a,b)=>a.price-b.price);
+ if(sort==="high")list.sort((a,b)=>b.price-a.price);
+ document.getElementById("listingCount").textContent=products.length;
+ const grid=document.getElementById("productGrid");
+ if(!list.length){grid.innerHTML='<div class="empty" style="grid-column:1/-1">No matching produce found. Try another search.</div>';return;}
+ grid.innerHTML=list.map(p=>`
+ <article class="product">
+  <div class="product-photo">${escapeHTML(p.emoji||"🌱")}</div>
+  <div class="product-body">
+   <span class="tag">${escapeHTML(p.category)}</span>
+   <h3>${escapeHTML(p.name)}</h3>
+   <div class="meta">👨‍🌾 ${escapeHTML(p.farmer)}<br>📍 ${escapeHTML(p.location)}<br>${escapeHTML(p.description||"Direct from the farm.")}<br>Available: ${p.qty} ${escapeHTML(p.unit)}</div>
+   <div class="price-row"><div class="price">₹${Number(p.price).toFixed(2)} <small>/ ${escapeHTML(p.unit)}</small></div>
+   <button class="primary" onclick="startOrder(${p.id})">Order</button></div>
+  </div>
+ </article>`).join("");
+}
+function escapeHTML(value){
+ return String(value).replace(/[&<>"']/g,char=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[char]));
+}
+function startOrder(id){
+ if(!currentUser){openAuth("customer");toast("Sign in as a customer to order.");return;}
+ if(currentUser.role!=="customer"){toast("Switch to a customer account to place orders.");return;}
+ selectedProduct=products.find(p=>p.id===id);
+ if(!selectedProduct)return;
+ document.getElementById("orderProductInfo").textContent=selectedProduct.name+" · ₹"+selectedProduct.price+"/"+selectedProduct.unit+" · "+selectedProduct.farmer;
+ document.getElementById("orderQty").value=1;document.getElementById("orderQty").max=selectedProduct.qty;
+ document.getElementById("orderNote").value="";
+ document.getElementById("orderModal").classList.remove("hidden");
+}
+function closeOrder(){document.getElementById("orderModal").classList.add("hidden");}
+function submitOrder(){
+ const qty=Number(document.getElementById("orderQty").value);
+ if(!selectedProduct||!Number.isInteger(qty)||qty<1||qty>selectedProduct.qty){toast("Enter a valid available quantity.");return;}
+ orders.unshift({id:Date.now(),productId:selectedProduct.id,product:selectedProduct.name,farmer:selectedProduct.farmer,customer:currentUser.name,qty,unit:selectedProduct.unit,total:qty*selectedProduct.price,note:document.getElementById("orderNote").value.trim(),status:"Pending",created:new Date().toLocaleString()});
+ saveData();closeOrder();toast("Order request sent to the farmer.");renderDashboard();
+}
+function renderDashboard(){
+ const title=document.getElementById("dashboardTitle"),sub=document.getElementById("dashboardSubtitle"),content=document.getElementById("dashboardContent");
+ if(!currentUser){title.textContent="Your dashboard";sub.textContent="Sign in to manage listings and orders.";content.innerHTML='<div class="empty">You are browsing as a guest.<br><br><button class="primary" onclick="openAuth()">Sign in / create demo account</button></div>';return;}
+ title.textContent="Hello, "+currentUser.name;sub.textContent=currentUser.role==="farmer"?"Manage your produce and incoming customer orders.":"View your order requests and discover produce.";
+ if(currentUser.role==="farmer"){
+  const mine=products.filter(p=>p.farmer===currentUser.name);
+  const incoming=orders.filter(o=>o.farmer===currentUser.name);
+  content.innerHTML=`
+   <div class="dashboard-grid">
+    <div class="panel"><h3>List new produce</h3><form id="listingForm" class="form-grid" onsubmit="addProduct(event)">
+     <label>Product name<input class="field" name="name" required placeholder="e.g. Fresh carrots"></label>
+     <label>Category<select class="field" name="category"><option>Vegetables</option><option>Fruits</option><option>Grains</option><option>Dairy</option><option>Other</option></select></label>
+     <label>Price (₹ per unit)<input class="field" name="price" type="number" min="0.01" step="0.01" required></label>
+     <label>Unit<input class="field" name="unit" required placeholder="kg / litre / bunch"></label>
+     <label>Available quantity<input class="field" name="qty" type="number" min="1" required></label>
+     <label>Location<input class="field" name="location" required placeholder="Village / district"></label>
+     <label>Product emoji<input class="field" name="emoji" maxlength="4" placeholder="🥕"></label>
+     <label class="wide">Description<textarea class="field" name="description" rows="2" placeholder="Quality, harvest date, variety..."></textarea></label>
+     <div class="wide"><button class="primary" type="submit">Publish listing</button></div>
+    </form></div>
+    <div class="panel"><h3>Your listings (${mine.length})</h3>${mine.length?mine.map(p=>`<div class="order-card"><div class="order-top"><strong>${escapeHTML(p.name)}</strong><span class="tag">₹${p.price}/${escapeHTML(p.unit)}</span></div><p class="meta">${p.qty} ${escapeHTML(p.unit)} available · ${escapeHTML(p.location)}</p><button class="danger" onclick="deleteProduct(${p.id})">Remove listing</button></div>`).join(""):'<div class="empty">You have not listed any produce yet.</div>'}</div>
+   </div>
+   <div class="panel"><h3>Incoming orders (${incoming.length})</h3>${incoming.length?incoming.map(orderHTML).join(""):'<div class="empty">New customer orders will appear here.</div>'}</div>
+   <div class="notice">Demo mode: listings and orders are saved in this browser only. Add a secure backend before using this with real customers.</div>`;
+ }else{
+  const mine=orders.filter(o=>o.customer===currentUser.name);
+  content.innerHTML=`<div class="panel"><h3>My orders (${mine.length})</h3>${mine.length?mine.map(orderHTML).join(""):'<div class="empty">You have not placed any orders yet. Browse the marketplace to get started.</div>'}</div>
+  <div class="notice">Orders are requests, not confirmed payments. Contact the farmer to agree on pickup or delivery details.</div>`;
+ }
+}
+function orderHTML(o){
+ const farmerView=currentUser&&currentUser.role==="farmer";
+ return `<div class="order-card"><div class="order-top"><strong>${escapeHTML(o.product)} × ${o.qty} ${escapeHTML(o.unit)}</strong><span class="status ${escapeHTML(o.status)}">${escapeHTML(o.status)}</span></div>
+ <p class="meta">${farmerView?"Customer: "+escapeHTML(o.customer):"Farmer: "+escapeHTML(o.farmer)} · Total estimate: ₹${Number(o.total).toFixed(2)}<br>${escapeHTML(o.created)}${o.note?"<br>Message: "+escapeHTML(o.note):""}</p>
+ ${farmerView&&o.status==="Pending"?`<button class="secondary" onclick="updateOrder(${o.id},'Accepted')">Accept</button> <button class="danger" onclick="updateOrder(${o.id},'Rejected')">Reject</button>`:""}
+ ${farmerView&&o.status==="Accepted"?`<button class="secondary" onclick="updateOrder(${o.id},'Delivered')">Mark delivered</button>`:""}
+ </div>`;
+}
+function addProduct(event){
+ event.preventDefault();const data=Object.fromEntries(new FormData(event.target).entries());
+ const price=Number(data.price),qty=Number(data.qty);
+ if(price<=0||qty<=0){toast("Enter a valid price and quantity.");return;}
+ products.unshift({id:Date.now(),name:data.name.trim(),category:data.category,price,unit:data.unit.trim(),qty,farmer:currentUser.name,location:data.location.trim(),emoji:data.emoji||"🌱",description:data.description.trim()});
+ saveData();renderProducts();renderDashboard();toast("Your produce listing is live.");
+}
+function deleteProduct(id){
+ if(!confirm("Remove this listing?"))return;
+ products=products.filter(p=>p.id!==id);saveData();renderProducts();renderDashboard();toast("Listing removed.");
+}
+function updateOrder(id,status){
+ const order=orders.find(o=>o.id===id);if(!order)return;
+ order.status=status;saveData();renderDashboard();toast("Order status updated.");
+}
+renderProducts();
+</script>
+</body>
+</html>
